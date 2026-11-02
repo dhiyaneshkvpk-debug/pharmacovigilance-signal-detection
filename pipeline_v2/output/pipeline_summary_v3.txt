@@ -1,0 +1,13 @@
+Source: FAERS 2026 Q1 + Q2
+DELETE ID field configured: primaryid
+Unique DELETE IDs listed: 10352
+Latest retained cases: 793001
+Retained report IDs (N): 793001
+Unique drug names: 44368
+Unique reactions: 14828
+Drug-reaction pairs: 2136853
+Pairs with a >= 3: 670720
+Exploratory potential signals: 490415
+Drug role definition: all recorded roles
+Interpretation: exploratory disproportionality screening only
+Output CSV: D:\academics\Data science and AI\End_to_end project\healthcare\Project\pipeline_v2\output\faers_ror_signals_v3.csv

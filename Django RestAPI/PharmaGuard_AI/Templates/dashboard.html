@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PharmaGuard AI | Drug Safety Dashboard</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">PG</div>
+                <div>
+                    <h2>PharmaGuard AI</h2>
+                    <p>Drug Safety Intelligence</p>
+                </div>
+            </div>
+
+            <nav class="navigation">
+                <a href="#overview" class="nav-link active">
+                    <span>▦</span> Overview
+                </a>
+                <a href="#drug-search" class="nav-link">
+                    <span>⌕</span> Drug Safety Search
+                </a>
+                <a href="#signals" class="nav-link">
+                    <span>⚕</span> Safety Signals
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>Powered by FDA FAERS data</p>
+                <span>Research & Analytics</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1>Drug Safety Dashboard</h1>
+                    <p>Monitor and explore potential drug safety signals.</p>
+                </div>
+
+                <div class="api-status">
+                    <span class="status-dot"></span>
+                    <span id="api-status">Checking API...</span>
+                </div>
+            </header>
+
+            <!-- Overview -->
+            <section id="overview" class="dashboard-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Overview</h2>
+                        <p>Summary of the available safety signal dataset.</p>
+                    </div>
+                    <button id="refresh-btn" type="button">
+                        Refresh Data
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <p>Total Records</p>
+                        <h3 id="total-records">--</h3>
+                        <span>Available database records</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <p>Potential Safety Signals</p>
+                        <h3 id="signal-count">--</h3>
+                        <span>Flagged for further review</span>
+                    </article>
+
+                    <article class="stat-card">
+                        <p>Other Records</p>
+                        <h3 id="other-count">--</h3>
+                        <span>Not flagged as signals</span>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Drug Search -->
+            <section id="drug-search" class="dashboard-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Drug Safety Search</h2>
+                        <p>Search the database using a drug name.</p>
+                    </div>
+                </div>
+
+                <form id="drug-search-form" class="search-form">
+                    <input
+                        type="text"
+                        id="drug-name"
+                        placeholder="Enter drug name, e.g. DEXYCU"
+                        required
+                    >
+
+                    <button type="submit">Search Drug</button>
+                </form>
+
+                <p id="search-message" role="status">
+                    Enter a drug name to view its safety records.
+                </p>
+            </section>
+
+            <!-- Safety Signal Results -->
+            <section id="signals" class="dashboard-section">
+                <div class="section-heading">
+                    <div>
+                        <h2>Safety Signal Results</h2>
+                        <p id="results-description">
+                            Search results will appear here.
+                        </p>
+                    </div>
+
+                    <label class="filter-control">
+                        <input type="checkbox" id="signal-only">
+                        Signals only
+                    </label>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Drug Name</th>
+                                <th>Adverse Event</th>
+                                <th>Case Count (a)</th>
+                                <th>ROR</th>
+                                <th>95% CI</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="signals-table-body">
+                            <tr>
+                                <td colspan="6">
+                                    Search for a drug to view results.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button id="previous-page" type="button" disabled>
+                        Previous
+                    </button>
+
+                    <span id="page-info">Page 1</span>
+
+                    <button id="next-page" type="button" disabled>
+                        Next
+                    </button>
+                </div>
+            </section>
+
+            <!-- Scientific Disclaimer -->
+            <footer class="disclaimer">
+                <strong>Scientific disclaimer:</strong>
+                Statistical safety signals indicate potential associations
+                and do not establish that a drug caused an adverse event.
+                Results require appropriate clinical and statistical review.
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

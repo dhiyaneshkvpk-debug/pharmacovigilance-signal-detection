@@ -1,0 +1,9 @@
+Source: FAERS 2026 Q1 + Q2
+Unique deleted IDs listed: 10352
+Latest retained cases: 793001
+Retained report IDs (N): 793001
+Unique PS drug names: 3172
+Unique reactions: 14828
+Drug-reaction pairs: 501566
+Exploratory potential signals: 88382
+Output CSV: D:\academics\Data science and AI\End_to_end project\healthcare\Project\pipeline_v2\output\faers_ror_signals_v2.csv

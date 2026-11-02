@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+env/
+
+# Django
+*.sqlite3
+db.sqlite3
+media/
+
+# Secrets
+.env
+.env.*
+!.env.example
+secrets.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# FAERS raw and processed datasets
+Data/Cleaned data/
+Data/Processed/
+Data/Raw/
+
+# Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Oversized generated artifacts (>100 MB)
+output/Report.pbix
+pipeline_v2/output/faers_signal_review_v1.csv
+pipeline_v2/output/faers_ror_signals_v3.csv
+pipeline_v2/output/faers_ror_signals_v4.csv
+pipeline_v2/output/faers_ror_signals_v5.csv
+pipeline_v2/output/faers_ror_signals_v6.csv
+pipeline_v2/output/faers_ror_signals_v7.csv
+# Generated FAERS pipeline outputs
+pipeline_v2/output/*.csv
+# Generated FAERS pipeline outputs
+pipeline_v2/output/*.csv
+
+# Local FAERS datasets and generated reports
+Django RestAPI/PharmaGuard_AI/faers_safety_signals.csv
+Django RestAPI/faers_audit_sample.csv
+Django RestAPI/faers_db_drug_counts.csv
+Django RestAPI/faers_db_reaction_counts.csv

@@ -1,0 +1,19 @@
+Source: FAERS 2026 Q1 + Q2
+Processing order: latest CASEVERSION per CASEID, then DELETE filter
+DELETE identifier field assumed: caseid
+Unique DELETE IDs listed: 10352
+Latest unique CASEIDs before DELETE filter: 793001
+Latest cases matching DELETE IDs: 655
+Latest retained cases: 792346
+Retained report IDs (N): 792346
+Unique drug keys: 44354
+Unique reaction terms: 14822
+Drug-reaction pairs: 2136214
+Pairs with a >= 3: 670158
+Minimum co-reported cases for V6 screening: 5
+V6 exploratory potential signals: 334906
+Drug role definition: all recorded roles
+Interpretation: exploratory disproportionality screening only
+Limitations: reporting bias, confounding, duplicates and incomplete reports
+Signals do not establish causality or incidence.
+Output CSV: D:\academics\Data science and AI\End_to_end project\healthcare\Project\pipeline_v2\output\faers_ror_signals_v7.csv

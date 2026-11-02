@@ -1,0 +1,7 @@
+FAERS signal review — exploratory only
+Input rows: 2136214
+Review candidates: 329486
+Criteria: a >= 5, b >= 5, c >= 5, lower 95% CI > 1
+These are review-prioritization criteria, not clinically validated thresholds.
+FAERS disproportionality does not establish causality or incidence.
+Output: D:\academics\Data science and AI\End_to_end project\healthcare\Project\pipeline_v2\output\faers_signal_review_v1.csv
