@@ -1,0 +1,5 @@
+model,accuracy,precision,recall,f1,roc_auc
+Baseline (signal before = signal again),0.618,0.494,0.872,0.631,0.669
+Logistic Regression,0.681,0.566,0.633,0.598,0.741
+Random Forest,0.706,0.598,0.653,0.624,0.775
+Gradient Boosting,0.747,0.72,0.532,0.612,0.804

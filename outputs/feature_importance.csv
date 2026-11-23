@@ -1,0 +1,8 @@
+feature,importance
+log_prr,0.1649
+log_ci_lower,0.1581
+log_chi2,0.1515
+log_ror,0.1449
+log_cases,0.1345
+log_drug_total,0.1259
+log_reaction_total,0.1202
