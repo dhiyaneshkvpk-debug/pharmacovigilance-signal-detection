@@ -1,4 +1,24 @@
-# PharmaGuard AI (simple version)
+# PharmaGuard AI
+
+## Screenshots
+
+### Overview
+![Overview](dashboard_screenshots/overview.png)
+
+### Ask PharmaGuard (local AI assistant)
+![Ask PharmaGuard](dashboard_screenshots/ask_pharmaguard_ai.png)
+
+### Top drugs and reactions
+![Top drugs and reactions](dashboard_screenshots/top_drugs_reactions_cases.png)
+
+### Signal explorer
+![Signal explorer](dashboard_screenshots/signal_explorer.png)
+
+### Drug profile
+![Drug profile](dashboard_screenshots/drug_profile.png)
+
+### Machine learning comparison
+![Machine learning comparison](dashboard_screenshots/machine_learning_comparison.png)
 
 **Goal:** find which medicines are reported with unusual side effects, using the US FDA's
 adverse-event database (FAERS).
@@ -7,6 +27,7 @@ adverse-event database (FAERS).
 raw zip files -> STEP 1 clean -> STEP 2 statistics -> STEP 3 machine learning -> Streamlit dashboard
                                          |
                                          +--> signals.csv -> Django REST API (database + JSON)
+                                         +--> Ask PharmaGuard: local AI (Ollama) explains answers in plain English
 ```
 
 ## The idea in 2 minutes (read this first)
@@ -26,7 +47,9 @@ helpers.py         the ROR calculation (used by step 2 and 3)
 step1_data_processing.py
 step2_statistical_analysis.py
 step3_machine_learning.py
-app.py             Streamlit dashboard
+app.py             Streamlit dashboard (includes the "Ask PharmaGuard" chat page)
+assistant.py       the AI helper: finds facts, asks Ollama
+test_assistant.py  simple checks for assistant.py
 django_api/        Django REST API (reads outputs/signals.csv)
   manage.py
   config/          settings.py, urls.py
@@ -123,6 +146,52 @@ Wrong input, e.g. `?strength=huge`, returns a clear error message instead of cra
 | `urls.py` | connects each URL to its view |
 | `admin.py` | lets you browse the data at http://127.0.0.1:8000/admin/ (needs `python manage.py createsuperuser`) |
 
+## Ask PharmaGuard - a local AI assistant (Ollama)
+
+**Idea:** many people cannot read tables of numbers. This page lets anyone type a normal question
+(*"Tell me about Dupixent"*, *"Which medicines are linked to headache?"*) and get a short answer in simple words.
+
+- **LLM** = a "Large Language Model": an AI that reads and writes text.
+- **Ollama** = a free program that runs an LLM **on your own computer**. No internet needed after the download, no API key, no cost, and no data leaves your computer.
+- **How it answers (3 steps):**
+  1. **Find** - it looks for drug and reaction names in the question
+  2. **Look up** - it collects the real numbers for them from our result files (the "facts")
+  3. **Explain** - it gives the question + facts to the AI, which writes a simple answer
+
+The AI is told to use **only** the facts, never to give medical advice, and to keep it short.
+Under every answer there is a **"Facts used"** box, so anyone can check the numbers.
+If Ollama is not running, the page still works: it shows the facts without the AI explanation.
+
+**Set it up (Windows)**
+
+1. Install Ollama from https://ollama.com/download (it keeps running in the background; look for the llama icon near the clock).
+2. In PowerShell download a small model (about 2 GB, one time only):
+   ```powershell
+   ollama pull llama3.2
+   ```
+   Checkpoint: `ollama list` shows `llama3.2`.
+   *(Old or low-memory PC? Use `ollama pull llama3.2:1b` and type `llama3.2:1b` under "AI settings" on the page.)*
+3. Start the dashboard and open **💬 Ask PharmaGuard** in the left menu:
+   ```powershell
+   streamlit run app.py
+   ```
+   Checkpoint: a green box says **AI is ready**. Click an example question.
+
+**Good to know**
+
+- The first answer can take 10-30 seconds on a normal laptop (the model has to load). Later answers are faster.
+- Type drug names the way the FDA lists them (e.g. `ACETAMINOPHEN`, not `paracetamol`). Unknown names are reported honestly, not guessed.
+- The AI can still make mistakes with wording. That is why the facts are shown - the numbers always come from the data, not from the AI.
+- **Sharing:** when Streamlit starts it prints a **Network URL**. Colleagues on the same Wi-Fi can open it in a browser, as long as your computer stays on with Ollama running. There is no login, so share only on a trusted network.
+
+**Which file does what**
+
+| File | Job |
+|---|---|
+| `assistant.py` | find names, build the facts, talk to Ollama, and hold the **rules the AI must follow** (`SYSTEM_PROMPT`) |
+| `app.py` (chat page) | the chat screen, example buttons, status light, "Facts used" box |
+| `test_assistant.py` | 7 checks that run without Ollama: `python test_assistant.py` |
+
 ## What each step does
 
 | Step | Skill | What happens |
@@ -131,6 +200,7 @@ Wrong input, e.g. `?strength=huge`, returns a clear error message instead of cra
 | 2 | Statistics | descriptive stats (age, sex, top drugs) + ROR, PRR, confidence interval, chi-square test, p-value for every pair |
 | 3 | Machine learning | use Quarter 1 numbers to predict which pairs are signals in Quarter 2; compare 3 models with a baseline |
 | App | Dashboard | 6 pages: overview, top drugs, signal explorer, drug profile, ML results, about |
+| Ask | Local AI chat | Ollama explains the numbers in plain English, using only facts from our tables |
 | Django | Backend API | stores `signals.csv` in a database and serves it as JSON (4 endpoints) |
 
 ## Words you will see
@@ -151,6 +221,8 @@ Wrong input, e.g. `?strength=huge`, returns a clear error message instead of cra
 3. In `step3_machine_learning.py` change `n_estimators=200` to `50`. Does the Random Forest score change?
 4. Add a word to `IGNORE_WORDS` in `helpers.py` and see which pairs become "Excluded".
 5. In `django_api/drugsafety/views.py`, change the default `page_size` from `20` to `5` and reload `/api/signals/`.
+7. In `assistant.py` change the rule "Keep the answer under 150 words" to 50 words and ask the same question again.
+8. In `assistant.py` add `"overdose"` to `ADVICE_WORDS`, then run `python test_assistant.py`.
 6. Add a new filter `?max_p=0.01` to `signal_list` (hint: copy the `min_cases` lines and use `p_value__lte`).
 
 ## Common problems
@@ -160,6 +232,10 @@ Wrong input, e.g. `?strength=huge`, returns a clear error message instead of cra
 - **`streamlit` not recognized** - run `venv\Scripts\activate` first.
 - **Dashboard says "Results not found"** - run steps 1, 2 and 3 first.
 - Run every command from the project folder (not from inside `data`). Django commands run inside `django_api`.
+- **Chat says "Ollama is not running"** - open the Ollama app (or run `ollama serve`) and refresh the page.
+- **Chat says the model is not installed** - run `ollama pull llama3.2`.
+- **Chat is very slow** - use the smaller model `llama3.2:1b`, and close other big programs.
+- **"No drug or reaction name was recognised"** - check the spelling, or find the exact name on the *Drug profile* page.
 - **Django: `no such table`** - run `python manage.py migrate` first.
 - **Django: `File not found ... signals.csv`** - run step 2 first.
 - **Django: `load_signals` is slow** - it loads 147,000 rows; about 15 seconds is normal.
@@ -170,5 +246,7 @@ Wrong input, e.g. `?strength=huge`, returns a clear error message instead of cra
 confidence intervals and chi-square tests to detect drug-safety signals, then trained models on
 Quarter 1 statistics to predict Quarter 2 signals, which beat a simple baseline (ROC-AUC 0.80 vs 0.67).
 I split the data by drug and by time to avoid data leakage, and I built a Streamlit dashboard.
+I added a local LLM assistant (Ollama) that explains the statistics in plain language, grounded only on
+retrieved facts to avoid made-up numbers, with safety rules against medical advice.
 I stored the results in a database and exposed them through a Django REST API with filtering, pagination,
 validation and unit tests. I know FAERS signals are hypotheses, not proof of causation."
